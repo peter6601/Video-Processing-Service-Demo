@@ -1,0 +1,46 @@
+# 依赖目录
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 环境变量文件
+.env
+.env.local
+.env.*.local
+
+# 构建输出
+dist/
+build/
+outputs/
+
+# 日志文件
+logs/
+*.log
+
+# 运行时数据
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# IDE 和编辑器文件
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# 上传文件目录
+uploads/
+
+# TypeScript
+*.tsbuildinfo
+
+# 缓存目录
+.cache/
+.temp/ 
