@@ -1,3 +1,4 @@
+// server.ts
 import express from 'express';
 import multer from 'multer';
 import path from 'path';
@@ -7,7 +8,12 @@ import ffmpeg from 'fluent-ffmpeg';
 const app = express();
 const port = 3000;
 
-// 設定 multer 檔案儲存
+// Health check API
+app.get('/ping', (req, res) => {
+  res.send('pong');
+});
+
+// Setup multer for file uploads
 const storage = multer.diskStorage({
   destination: 'uploads/',
   filename: (req, file, cb) => {
@@ -17,30 +23,33 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// 路由：上傳影片
-app.post('/upload', upload.single('video'), async (req, res) => {
-  if (!req.file) return res.status(400).send('No file uploaded.');
+// POST /upload to receive and process video
+app.post('/upload', upload.single('video'), (req, res) => {
+  (async () => {
+    if (!req.file) return res.status(400).send('No file uploaded.');
 
-  const inputPath = req.file.path;
-  const videoId = path.basename(inputPath, path.extname(inputPath));
-  const outputDir = path.join('outputs', videoId);
+    const inputPath = req.file.path;
+    const videoId = path.basename(inputPath, path.extname(inputPath));
+    const outputDir = path.join('outputs', videoId);
 
-  try {
-    await generateHLS(inputPath, outputDir);
-    res.json({
-      message: 'Upload and conversion complete',
-      masterPlaylistUrl: `/outputs/${videoId}/master.m3u8`
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Conversion failed');
-  }
+    try {
+      await generateHLS(inputPath, outputDir);
+      res.json({
+        message: 'Upload and conversion complete',
+        masterPlaylistUrl: `/outputs/${videoId}/master.m3u8`
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Conversion failed');
+    }
+  })();
 });
 
-// 靜態提供 HLS 資料夾內容
+
+// Serve the outputs statically
 app.use('/outputs', express.static(path.join(__dirname, 'outputs')));
 
-// 啟動伺服器
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
@@ -51,7 +60,7 @@ const resolutions = [
   { name: '720p', width: 1280, height: 720, bitrate: '2800k' }
 ];
 
-// HLS 產生器函數
+// HLS generator function
 async function generateHLS(inputPath: string, outputDir: string) {
   if (!fs.existsSync(outputDir)) fs.mkdirSync(outputDir, { recursive: true });
 
