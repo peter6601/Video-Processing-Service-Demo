@@ -8,6 +8,8 @@ import ffmpeg from 'fluent-ffmpeg';
 const app = express();
 const port = 3000;
 
+console.log('🟢 server.ts 啟動了！');
+
 // Health check API
 app.get('/ping', (req, res) => {
   res.send('pong');
