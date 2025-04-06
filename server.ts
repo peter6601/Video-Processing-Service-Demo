@@ -1,14 +1,16 @@
 // server.ts
 import express from 'express';
+import cors from 'cors';  // 首先安裝 cors: npm install cors
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 console.log('🟢 server.ts 啟動了！');
+app.use(cors());
 
 // Health check API
 app.get('/ping', (req, res) => {
