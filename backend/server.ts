@@ -1,10 +1,15 @@
 // server.ts
 import express from 'express';
-import cors from 'cors';  // 首先安裝 cors: npm install cors
+import cors from 'cors'; // 首先安裝 cors: npm install cors
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import ffmpeg from 'fluent-ffmpeg';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const port = 3001;
@@ -23,7 +28,7 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now();
     cb(null, `${uniqueSuffix}-${file.originalname}`);
-  }
+  },
 });
 const upload = multer({ storage });
 
@@ -40,7 +45,7 @@ app.post('/upload', upload.single('video'), (req, res) => {
       await generateHLS(inputPath, outputDir);
       res.json({
         message: 'Upload and conversion complete',
-        masterPlaylistUrl: `/outputs/${videoId}/master.m3u8`
+        masterPlaylistUrl: `/outputs/${videoId}/master.m3u8`,
       });
     } catch (err) {
       console.error(err);
@@ -48,7 +53,6 @@ app.post('/upload', upload.single('video'), (req, res) => {
     }
   })();
 });
-
 
 // Serve the outputs statically
 app.use('/outputs', express.static(path.join(__dirname, 'outputs')));
@@ -61,7 +65,7 @@ app.listen(port, () => {
 const resolutions = [
   { name: '360p', width: 640, height: 360, bitrate: '800k' },
   { name: '480p', width: 854, height: 480, bitrate: '1400k' },
-  { name: '720p', width: 1280, height: 720, bitrate: '2800k' }
+  { name: '720p', width: 1280, height: 720, bitrate: '2800k' },
 ];
 
 // HLS generator function
@@ -86,7 +90,8 @@ async function generateHLS(inputPath: string, outputDir: string) {
           '-sc_threshold 0',
           '-hls_time 10',
           '-hls_list_size 0',
-          '-hls_segment_filename', path.join(resDir, 'segment%d.ts')
+          '-hls_segment_filename',
+          path.join(resDir, 'segment%d.ts'),
         ])
         .output(path.join(resDir, 'index.m3u8'))
         .on('end', () => {

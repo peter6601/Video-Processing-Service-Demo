@@ -1,10 +1,14 @@
 {
   "name": "video-upload-hls-starter",
   "version": "1.0.0",
+  "type": "module", 
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node server.ts"
+    "dev": "ts-node --loader ts-node/esm server.ts",
+    "format": "prettier --write \"**/*.{ts,js,json,md}\"",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix"
   },
   "keywords": [],
   "author": "",
@@ -17,12 +21,20 @@
     "multer": "^1.4.5-lts.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.24.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
     "@types/fluent-ffmpeg": "^2.1.27",
     "@types/multer": "^1.4.12",
     "@types/node": "^22.13.17",
+    "@typescript-eslint/eslint-plugin": "^8.29.1",
+    "@typescript-eslint/parser": "^8.29.1",
+    "eslint": "^9.24.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-prettier": "^5.2.6",
+    "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "typescript-eslint": "^8.29.1"
   }
 }
