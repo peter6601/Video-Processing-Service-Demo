@@ -44,3 +44,6 @@ uploads/
 # 缓存目录
 .cache/
 .temp/ 
+
+# firebase金鑰
+**/serviceAccountKey.json
