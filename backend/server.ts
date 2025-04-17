@@ -20,9 +20,14 @@ const __dirname = dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3001;
 
+// 是否為 Render 環境
+const isRender = process.env.RENDER === 'true';
+const uploadDir = isRender ? '/tmp/uploads' : path.join(__dirname, 'uploads');
+const outputBaseDir = isRender ? '/tmp/outputs' : path.join(__dirname, 'outputs');
+
 // Enable CORS
 app.use(cors());
-app.use('/outputs', express.static(path.join(__dirname, 'outputs')));
+app.use('/outputs', express.static(outputBaseDir));
 
 // Firebase 初始化
 let serviceAccount;
@@ -49,7 +54,6 @@ app.get('/ping', (req, res) => {
 });
 
 // 確保上傳目錄存在
-const uploadDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -75,7 +79,7 @@ app.post('/upload', upload.single('video'), (req: Request, res: Response) => {
 
     const inputPath = req.file.path;
     const videoId = path.basename(inputPath, path.extname(inputPath));
-    const outputDir = path.join(__dirname, 'outputs', videoId);
+    const outputDir = path.join(outputBaseDir, videoId);
 
     try {
       await generateHLS(inputPath, outputDir);
