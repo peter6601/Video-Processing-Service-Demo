@@ -12,13 +12,11 @@ jobs:
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          MESSAGE="🚀 **Pull Request Update**
-          - [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})
-          - **Title:** ${{ github.event.pull_request.title }}
-          - **Author:** ${{ github.event.pull_request.user.login }}
-          - **Action:** ${{ github.event.action }}"
-          
+          MESSAGE="🚀 **Pull Request Update**\n- [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})\n- **Title:** ${{ github.event.pull_request.title }}\n- **Author:** ${{ github.event.pull_request.user.login }}\n- **Action:** ${{ github.event.action }}"
+
+          jq -n --arg content "$MESSAGE" '{content: $content}' > payload.json
+
           curl -H "Content-Type: application/json" \
                -X POST \
-               -d "{\"content\": \"$MESSAGE\"}" \
+               -d @payload.json \
                $DISCORD_WEBHOOK
