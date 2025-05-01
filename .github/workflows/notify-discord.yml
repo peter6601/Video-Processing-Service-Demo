@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Notify Discord
-        uses: Ilshidur/action-discord@master
-        with:
-          webhook: ${{ secrets.DISCORD_WEBHOOK }}
-          message: |
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          SLACK_MESSAGE: |
             🚀 **Pull Request Update**
             - [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})
             - **Title:** ${{ github.event.pull_request.title }}
