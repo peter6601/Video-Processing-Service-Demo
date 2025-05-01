@@ -13,7 +13,7 @@ import { dirname } from 'path';
 // 載入 .env 環境變數
 dotenv.config();
 
-// ES模塊兼容性處理
+// ES模塊兼容性處理 測試
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
