@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-// 載入 .env 環境變數 測試1
+// 載入 .env 環境變數
 dotenv.config();
 
 // ES模塊兼容性處理 測試
