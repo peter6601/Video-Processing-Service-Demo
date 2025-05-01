@@ -8,13 +8,17 @@ jobs:
   discord-notify:
     runs-on: ubuntu-latest
     steps:
-      - name: Notify Discord
-        uses: rtCamp/action-slack-notify@v2
+      - name: Send message to Discord via curl
         env:
-          SLACK_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-          SLACK_MESSAGE: |
-            🚀 **Pull Request Update**
-            - [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})
-            - **Title:** ${{ github.event.pull_request.title }}
-            - **Author:** ${{ github.event.pull_request.user.login }}
-            - **Action:** ${{ github.event.action }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          MESSAGE="🚀 **Pull Request Update**
+          - [#${{ github.event.pull_request.number }}](${{ github.event.pull_request.html_url }})
+          - **Title:** ${{ github.event.pull_request.title }}
+          - **Author:** ${{ github.event.pull_request.user.login }}
+          - **Action:** ${{ github.event.action }}"
+          
+          curl -H "Content-Type: application/json" \
+               -X POST \
+               -d "{\"content\": \"$MESSAGE\"}" \
+               $DISCORD_WEBHOOK
