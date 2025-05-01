@@ -268,5 +268,6 @@ app.delete('/api/videos/:videoId', (req: Request<{ videoId: string }>, res: Resp
 
 // 啟動伺服器
 app.listen(port, () => {
+  //TODO:修改console.log
   console.log(`🚀 Server running at http://localhost:${port}`);
 });
